@@ -36,10 +36,17 @@ public class AuthController {
     public String getUserProfileFromLinkedIn(@RequestBody Map<String,String> reqBody) {
         String code = reqBody.get("token").replaceAll("\"", "");
         HttpHeaders headers=headers=new HttpHeaders();
-        headers.set("Authorization","Bearer "+code);
+        headers.setBearerAuth(code);
+        headers.set("Cache-Control","no-cache");
+        headers.set("Host","joinsmart.herokuapp.com");
+        headers.set("Connection","keep-alive");
         String url="https://api.linkedin.com/v2/me";
-        String forObject = restTemplate.getForObject(url, String.class);
-        return forObject;
+        HttpEntity entity = new HttpEntity(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url, HttpMethod.GET, entity, String.class);
+
+        return response.getBody();
     }
 
     @PostMapping("/getaccesstoken")
