@@ -27,6 +27,16 @@ public class AuthController {
 
 
 
+    @PostMapping("/getuserprofile")
+    public String getUserProfileFromLinkedIn(@RequestBody String token) {
+        HttpHeaders headers=headers=new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(token);
+        String url="https://api.linkedin.com/v2/me";
+        String forObject = restTemplate.getForObject(url, String.class);
+        return forObject;
+    }
+    
     @PostMapping("/getaccesstoken")
     public String getAccessToken(@RequestBody String code) {
         System.out.println(code);
@@ -40,13 +50,7 @@ public class AuthController {
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(linkedInAccessTokenUrl, request, String.class);
         String res=stringResponseEntity.getBody();
         String access_token = new Gson().fromJson(res, JsonElement.class).getAsJsonObject().get("access_token").toString();
-                /*System.out.println(access_token);
-        headers=new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(access_token);
-        linkedInAccessTokenUrl="https://api.linkedin.com/v2/me";
-        JsonElement forObject = restTemplate.getForObject(linkedInAccessTokenUrl, JsonElement.class);
-        JsonObject asJsonObject = forObject.getAsJsonObject();*/
+
         return access_token;
     }
     @GetMapping("/callback")
