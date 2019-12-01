@@ -31,7 +31,7 @@ public class AuthController {
     public String getAccessToken(@RequestBody String code) {
         System.out.println(code);
         String linkedInAccessTokenUrl="https://www.linkedin.com/oauth/v2/accessToken";
-        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:8080/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
+        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=https://joinsmart.herokuapp.com/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
 
         HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -40,6 +40,13 @@ public class AuthController {
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(linkedInAccessTokenUrl, request, String.class);
         String res=stringResponseEntity.getBody();
         String access_token = new Gson().fromJson(res, JsonElement.class).getAsJsonObject().get("access_token").toString();
+                /*System.out.println(access_token);
+        headers=new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(access_token);
+        linkedInAccessTokenUrl="https://api.linkedin.com/v2/me";
+        JsonElement forObject = restTemplate.getForObject(linkedInAccessTokenUrl, JsonElement.class);
+        JsonObject asJsonObject = forObject.getAsJsonObject();*/
         return access_token;
     }
     @GetMapping("/callback")
