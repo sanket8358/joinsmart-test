@@ -46,7 +46,7 @@ public class AuthController {
     public String getAccessToken(@RequestBody Map<String,String> reqBody) {
         String code=reqBody.get("code");
         String linkedInAccessTokenUrl="https://www.linkedin.com/oauth/v2/accessToken";
-        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:8080/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
+        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=https://joinsmart.herokuapp.com/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
         HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> payload =
