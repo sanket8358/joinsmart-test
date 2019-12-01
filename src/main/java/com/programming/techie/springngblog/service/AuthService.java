@@ -29,7 +29,9 @@ public class AuthService {
     @Autowired
     private JwtProvider jwtProvider;
 
-    public void signup(RegisterRequest registerRequest) {
+    public User signup(RegisterRequest registerRequest) {
+        Optional<User> byEmail = userRepository.findByEmail(registerRequest.getEmail());
+        if(byEmail.isPresent()) return null;
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encodePassword(registerRequest.getPassword()));
@@ -38,7 +40,7 @@ public class AuthService {
         user.setLastName(registerRequest.getLastName());
         user.setCreatedDate(new Date());
         user.setModifiedDate(new Date());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     private String encodePassword(String password) {
