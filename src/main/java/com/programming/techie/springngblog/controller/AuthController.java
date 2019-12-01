@@ -34,10 +34,9 @@ public class AuthController {
 
     @PostMapping("/getuserprofile")
     public String getUserProfileFromLinkedIn(@RequestBody Map<String,String> reqBody) {
-        String code = reqBody.get("token");
+        String code = reqBody.get("token").replaceAll("\"", "");
         HttpHeaders headers=headers=new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(code);
+        headers.set("Authorization","Bearer "+code);
         String url="https://api.linkedin.com/v2/me";
         String forObject = restTemplate.getForObject(url, String.class);
         return forObject;
@@ -47,7 +46,7 @@ public class AuthController {
     public String getAccessToken(@RequestBody Map<String,String> reqBody) {
         String code=reqBody.get("code");
         String linkedInAccessTokenUrl="https://www.linkedin.com/oauth/v2/accessToken";
-        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=https://joinsmart.herokuapp.com/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
+        String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:8080/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
         HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> payload =
