@@ -28,7 +28,8 @@ public class AuthController {
 
 
     @PostMapping("/getaccesstoken")
-    public String getAccessToken(@RequestParam("code") String code) {
+    public String getAccessToken(@RequestBody String code) {
+        System.out.println(code);
         String linkedInAccessTokenUrl="https://www.linkedin.com/oauth/v2/accessToken";
         String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:8080/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
 
