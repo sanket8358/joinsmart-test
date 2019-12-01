@@ -45,8 +45,12 @@ public class AuthController {
 
         ResponseEntity<String> response = restTemplate.exchange(
                 url, HttpMethod.GET, entity, String.class);
-
-        return response.getBody();
+        String data=response.getBody();
+        url="https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))";
+        response = restTemplate.exchange(
+                url, HttpMethod.GET, entity, String.class);
+        data=data.substring(0,data.length()-1)+","+response.getBody().substring(1,response.getBody().length()-1)+"}";
+        return data;
     }
 
     @PostMapping("/getaccesstoken")
