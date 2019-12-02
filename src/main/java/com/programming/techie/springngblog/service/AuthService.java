@@ -26,12 +26,14 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
+    private AuthUtil authUtil;
+    @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtProvider jwtProvider;
 
     public User signup(RegisterRequest registerRequest) {
-        if(new AuthUtil().isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
+        if(authUtil.isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encodePassword(registerRequest.getPassword()));
