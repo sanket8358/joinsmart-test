@@ -31,7 +31,7 @@ public class AuthService {
     private JwtProvider jwtProvider;
 
     public User signup(RegisterRequest registerRequest) {
-        if(AuthUtil.isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
+        if(new AuthUtil().isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encodePassword(registerRequest.getPassword()));

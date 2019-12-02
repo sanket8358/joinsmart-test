@@ -15,17 +15,17 @@ import java.util.Optional;
 
 public class AuthUtil {
     @Autowired
-    private static UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private static AuthService authService;
+    private AuthService authService;
 
-    public static boolean isEmailAlreadyRegistered(String email){
+    public boolean isEmailAlreadyRegistered(String email){
         Optional<User> byEmail = userRepository.findByEmail(email);
         return byEmail.isPresent();
     }
 
-    public static ResponseEntity checkLinkedInLoginAndSignup(JsonObject userData){
+    public ResponseEntity checkLinkedInLoginAndSignup(JsonObject userData){
         RegisterRequest user =new RegisterRequest();
         user.setEmail(userData.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("handle~").get("emailAddress").getAsString());
         if(isEmailAlreadyRegistered(user.getEmail())) {

@@ -44,7 +44,7 @@ public class AuthController {
         response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         data=data.substring(0,data.length()-1)+","+response.getBody().substring(1,response.getBody().length()-1)+"}";
         JsonObject userData = new Gson().fromJson(data, JsonElement.class).getAsJsonObject();
-        return AuthUtil.checkLinkedInLoginAndSignup(userData);
+        return new AuthUtil().checkLinkedInLoginAndSignup(userData);
     }
 
     @PostMapping("/getaccesstoken")
