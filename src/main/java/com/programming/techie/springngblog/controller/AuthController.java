@@ -30,19 +30,13 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
-
     @PostMapping("/getuserprofile")
-    public String getUserProfileFromLinkedIn(@RequestBody Map<String,String> reqBody) {
-        String code = reqBody.get("token").replaceAll("\"", "");
+    public ResponseEntity getUserProfileFromLinkedIn(@RequestBody Map<String,String> reqBody) {
+        String code = reqBody.get("token");
         HttpHeaders headers=headers=new HttpHeaders();
         headers.setBearerAuth(code);
-        headers.set("Cache-Control","no-cache");
-        headers.set("Host","joinsmart.herokuapp.com");
-        headers.set("Connection","keep-alive");
         String url="https://api.linkedin.com/v2/me";
         HttpEntity entity = new HttpEntity(headers);
-
         ResponseEntity<String> response = restTemplate.exchange(
                 url, HttpMethod.GET, entity, String.class);
         String data=response.getBody();
@@ -50,7 +44,14 @@ public class AuthController {
         response = restTemplate.exchange(
                 url, HttpMethod.GET, entity, String.class);
         data=data.substring(0,data.length()-1)+","+response.getBody().substring(1,response.getBody().length()-1)+"}";
-        return data;
+        JsonObject userData = new Gson().fromJson(data, JsonElement.class).getAsJsonObject();
+        RegisterRequest user =new RegisterRequest();
+        user.setLastName(userData.get("localizedLastName").toString());
+        user.setFirstName(userData.get("localizedFirstName").toString());
+        user.setEmail(userData.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("handle~").get("emailAddress").toString());
+        user.setPassword(userData.get("id").toString());
+        User signup = authService.signup(user);
+        return new ResponseEntity(signup,HttpStatus.OK);
     }
 
     @PostMapping("/getaccesstoken")
@@ -64,6 +65,7 @@ public class AuthController {
                 new HttpEntity<String>(body, headers);
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(linkedInAccessTokenUrl, payload, String.class);
         String res=stringResponseEntity.getBody();
+        System.out.println(res);
         String access_token = new Gson().fromJson(res, JsonElement.class).getAsJsonObject().get("access_token").toString();
 
         return access_token;
