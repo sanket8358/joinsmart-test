@@ -29,10 +29,10 @@ public class AuthUtil {
 
     public ResponseEntity checkLinkedInLoginAndSignup(JsonObject userData){
         RegisterRequest user =new RegisterRequest();
-        user.setEmail(userData.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("handle~").get("emailAddress").getAsString().toLowerCase());
+        user.setEmail((userData.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("handle~").get("emailAddress").getAsString()).toLowerCase());
         if(isEmailAlreadyRegistered(user.getEmail())) {
             LoginRequest req=new LoginRequest();
-            req.setEmail(user.getEmail());
+            req.setEmail(user.getEmail().toLowerCase());
             req.setPassword(userData.get("id").getAsString());
             AuthenticationResponse login = authService.login(req);
             return new ResponseEntity(login, HttpStatus.OK);
