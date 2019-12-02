@@ -35,7 +35,7 @@ public class AuthService {
     public User signup(RegisterRequest registerRequest) {
         if(authUtil.isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
         User user = new User();
-        user.setEmail(registerRequest.getEmail());
+        user.setEmail(registerRequest.getEmail().toLowerCase());
         user.setPassword(encodePassword(registerRequest.getPassword()));
         user.setRoleId(2L);
         user.setFirstName(registerRequest.getFirstName());
@@ -50,11 +50,11 @@ public class AuthService {
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail().toLowerCase(),
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String authenticationToken = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(authenticationToken, loginRequest.getEmail());
+        return new AuthenticationResponse(authenticationToken, loginRequest.getEmail().toLowerCase());
     }
 
     public Optional<org.springframework.security.core.userdetails.User> getCurrentUser() {
