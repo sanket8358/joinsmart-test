@@ -10,9 +10,11 @@ import com.programming.techie.springngblog.service.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class AuthUtil {
     @Autowired
     private UserRepository userRepository;
