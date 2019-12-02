@@ -57,13 +57,11 @@ public class AuthController {
         String body = "grant_type=authorization_code&code=" + code + "&redirect_uri=https://joinsmart.herokuapp.com/api/auth/callback&client_id=81sirvv927wpon&client_secret=t4OpCZ376aWqhOFe";
         HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<String> payload =
-                new HttpEntity<String>(body, headers);
+        HttpEntity<String> payload = new HttpEntity<String>(body, headers);
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(linkedInAccessTokenUrl, payload, String.class);
         String res=stringResponseEntity.getBody();
         System.out.println(res);
         String access_token = new Gson().fromJson(res, JsonElement.class).getAsJsonObject().get("access_token").toString();
-
         return access_token;
     }
     @GetMapping("/callback")

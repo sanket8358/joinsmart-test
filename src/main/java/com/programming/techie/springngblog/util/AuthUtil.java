@@ -38,7 +38,7 @@ public class AuthUtil {
             return new ResponseEntity(login, HttpStatus.OK);
         }
         else{
-            user.setPassword(userData.get("id").toString());
+            user.setPassword(userData.get("id").getAsString());
             user.setLastName(userData.get("localizedLastName").getAsString());
             user.setFirstName(userData.get("localizedFirstName").getAsString());
             return new ResponseEntity(authService.signup(user),HttpStatus.OK);
