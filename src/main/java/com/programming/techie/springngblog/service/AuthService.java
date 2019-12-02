@@ -5,6 +5,7 @@ import com.programming.techie.springngblog.dto.RegisterRequest;
 import com.programming.techie.springngblog.model.User;
 import com.programming.techie.springngblog.repository.UserRepository;
 import com.programming.techie.springngblog.security.JwtProvider;
+import com.programming.techie.springngblog.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,8 +31,7 @@ public class AuthService {
     private JwtProvider jwtProvider;
 
     public User signup(RegisterRequest registerRequest) {
-        Optional<User> byEmail = userRepository.findByEmail(registerRequest.getEmail());
-        if(byEmail.isPresent()) return null;
+        if(AuthUtil.isEmailAlreadyRegistered(registerRequest.getEmail())) return null;
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encodePassword(registerRequest.getPassword()));

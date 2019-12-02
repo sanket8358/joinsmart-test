@@ -9,6 +9,7 @@ import com.programming.techie.springngblog.dto.RegisterRequest;
 import com.programming.techie.springngblog.model.User;
 import com.programming.techie.springngblog.service.AuthService;
 import com.programming.techie.springngblog.service.AuthenticationResponse;
+import com.programming.techie.springngblog.util.AuthUtil;
 import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -37,21 +38,13 @@ public class AuthController {
         headers.setBearerAuth(code);
         String url="https://api.linkedin.com/v2/me";
         HttpEntity entity = new HttpEntity(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         String data=response.getBody();
         url="https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))";
-        response = restTemplate.exchange(
-                url, HttpMethod.GET, entity, String.class);
+        response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         data=data.substring(0,data.length()-1)+","+response.getBody().substring(1,response.getBody().length()-1)+"}";
         JsonObject userData = new Gson().fromJson(data, JsonElement.class).getAsJsonObject();
-        RegisterRequest user =new RegisterRequest();
-        user.setLastName(userData.get("localizedLastName").toString());
-        user.setFirstName(userData.get("localizedFirstName").toString());
-        user.setEmail(userData.getAsJsonArray("elements").get(0).getAsJsonObject().getAsJsonObject("handle~").get("emailAddress").toString());
-        user.setPassword(userData.get("id").toString());
-        User signup = authService.signup(user);
-        return new ResponseEntity(signup,HttpStatus.OK);
+        return AuthUtil.checkLinkedInLoginAndSignup(userData);
     }
 
     @PostMapping("/getaccesstoken")
